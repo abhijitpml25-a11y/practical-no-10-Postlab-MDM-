@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Career Path Explorer(CM25002)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: "#101827",
+            accent: "#38bdf8"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen">
+
+  <!-- Navigation -->
+  <nav class="border-b border-slate-800 bg-slate-900">
+    <div class="max-w-7xl mx-auto px-5 py-5 flex justify-between items-center">
+      <h1 class="text-xl sm:text-2xl font-bold text-sky-400">
+        AI Career Explorer
+      </h1>
+      <span class="text-sm text-slate-400 hidden sm:block">
+        Discover Your Future
+      </span>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="max-w-7xl mx-auto px-5 py-16 text-center">
+    <p class="text-sky-400 uppercase tracking-widest text-sm mb-4">
+      Artificial Intelligence & Machine Learning
+    </p>
+
+    <h2 class="text-3xl sm:text-5xl font-bold leading-tight">
+      Find Your Path in <span class="text-sky-400">AI</span>
+    </h2>
+
+    <p class="text-slate-400 max-w-2xl mx-auto mt-5">
+      Explore exciting technology careers, discover essential skills,
+      and find a learning direction that matches your interests.
+    </p>
+
+    <div class="max-w-xl mx-auto mt-8">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search careers or skills..."
+        class="w-full rounded-xl bg-slate-900 border border-slate-700
+        px-5 py-4 outline-none focus:border-sky-400"
+      >
+    </div>
+  </header>
+
+  <!-- Career Categories -->
+  <main class="max-w-7xl mx-auto px-5 pb-16">
+
+    <div class="flex flex-wrap gap-3 justify-center mb-10">
+      <button data-category="All"
+        class="filter-btn bg-sky-500 text-slate-950 px-5 py-2 rounded-full font-semibold">
+        All Careers
+      </button>
+
+      <button data-category="AI"
+        class="filter-btn bg-slate-800 px-5 py-2 rounded-full hover:bg-slate-700">
+        Artificial Intelligence
+      </button>
+
+      <button data-category="Data"
+        class="filter-btn bg-slate-800 px-5 py-2 rounded-full hover:bg-slate-700">
+        Data Science
+      </button>
+
+      <button data-category="Development"
+        class="filter-btn bg-slate-800 px-5 py-2 rounded-full hover:bg-slate-700">
+        Development
+      </button>
+    </div>
+
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="text-2xl font-bold">Explore Careers</h3>
+      <p id="resultCount" class="text-sm text-slate-400"></p>
+    </div>
+
+    <!-- Career Cards -->
+    <div id="careerContainer"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    </div>
+
+    <p id="emptyMessage"
+      class="hidden text-center text-slate-400 py-12">
+      No careers found. Try another search.
+    </p>
+
+  </main>
+
+  <!-- Career Details Modal -->
+  <div id="careerModal"
+    class="hidden fixed inset-0 z-50 bg-black/80 p-4
+    flex items-center justify-center">
+
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl
+      p-6 sm:p-8 max-w-lg w-full max-h-[85vh] overflow-y-auto">
+
+      <div class="flex justify-between items-start gap-4">
+        <h3 id="modalTitle" class="text-2xl font-bold text-sky-400"></h3>
+        <button id="closeModal"
+          class="text-slate-400 hover:text-white text-2xl"
+          aria-label="Close career details">&times;</button>
+      </div>
+
+      <p id="modalDescription" class="text-slate-300 mt-4"></p>
+
+      <h4 class="font-semibold mt-6 mb-3">Required Skills</h4>
+      <div id="modalSkills" class="flex flex-wrap gap-2"></div>
+
+      <h4 class="font-semibold mt-6 mb-2">Learning Path</h4>
+      <p id="modalPath" class="text-slate-400 leading-relaxed"></p>
+
+      <button id="doneButton"
+        class="mt-7 w-full bg-sky-500 text-slate-950
+        font-semibold rounded-lg py-3 hover:bg-sky-400">
+        Done
+      </button>
+    </div>
+  </div>
+
+  <footer class="border-t border-slate-800 text-center p-6 text-slate-500 text-sm">
+    AI Career Path Explorer | Learn Today, Build Tomorrow
+  </footer>
+
+  <script>
+    // Career information
+    const careers = [
+      {
+        title: "Machine Learning Engineer",
+        category: "AI",
+        icon: "⚙️",
+        description: "Build and deploy machine learning models that learn from data and make predictions.",
+        skills: ["Python", "Machine Learning", "SQL", "Statistics"],
+        path: "Learn Python, study mathematics and statistics, practise ML algorithms, and build projects."
+      },
+      {
+        title: "Data Scientist",
+        category: "Data",
+        icon: "📊",
+        description: "Analyse data, discover patterns, and help organisations make informed decisions.",
+        skills: ["Python", "Statistics", "Pandas", "Data Visualisation"],
+        path: "Learn Python and SQL, master statistics, practise data analysis, and create a portfolio."
+      },
+      {
+        title: "AI Researcher",
+        category: "AI",
+        icon: "🧠",
+        description: "Research new AI techniques and develop methods to solve complex problems.",
+        skills: ["Mathematics", "Python", "Deep Learning", "Research"],
+        path: "Build a strong mathematics foundation, study deep learning, read research papers, and experiment."
+      },
+      {
+        title: "Web Developer",
+        category: "Development",
+        icon: "💻",
+        description: "Create responsive websites and interactive web applications for real-world users.",
+        skills: ["HTML", "CSS", "JavaScript", "Git"],
+        path: "Learn HTML and CSS, practise JavaScript, build responsive projects, and learn version control."
+      },
+      {
+        title: "NLP Engineer",
+        category: "AI",
+        icon: "💬",
+        description: "Develop systems that understand and process human language, including chatbots.",
+        skills: ["Python", "NLP", "Deep Learning", "Text Processing"],
+        path: "Learn Python, study NLP fundamentals, practise text processing, and explore language models."
+      },
+      {
+        title: "Computer Vision Engineer",
+        category: "Development",
+        icon: "👁️",
+        description: "Build applications that interpret images and videos using computer vision techniques.",
+        skills: ["Python", "OpenCV", "Deep Learning", "Image Processing"],
+        path: "Learn Python and image processing, practise OpenCV, study neural networks, and build vision projects."
+      },
+      {
+        title: "Data Analyst",
+        category: "Data",
+        icon: "📈",
+        description: "Transform raw data into meaningful reports, dashboards, and business insights.",
+        skills: ["Excel", "SQL", "Python", "Visualisation"],
+        path: "Learn spreadsheets and SQL, practise data cleaning, and build dashboards and reports."
+      },
+      {
+        title: "AI Application Developer",
+        category: "Development",
+        icon: "🚀",
+        description: "Integrate AI models into useful applications, websites, and digital products.",
+        skills: ["Python", "APIs", "JavaScript", "AI Tools"],
+        path: "Learn programming, understand APIs, explore AI model integration, and build practical applications."
+      },
+      {
+        title: "Deep Learning Engineer",
+        category: "AI",
+        icon: "🔬",
+        description: "Develop neural network systems for complex tasks such as recognition and prediction.",
+        skills: ["Python", "Neural Networks", "Linear Algebra", "PyTorch"],
+        path: "Study linear algebra and calculus, learn neural networks, practise a deep learning framework, and build projects."
+      }
+    ];
+
+    const container = document.getElementById("careerContainer");
+    const searchInput = document.getElementById("searchInput");
+    const resultCount = document.getElementById("resultCount");
+    const emptyMessage = document.getElementById("emptyMessage");
+    const modal = document.getElementById("careerModal");
+
+    let activeCategory = "All";
+
+    // Display career cards
+    function displayCareers() {
+      const query = searchInput.value.toLowerCase().trim();
+
+      const filteredCareers = careers.filter(career => {
+        const matchesCategory =
+          activeCategory === "All" ||
+          career.category === activeCategory;
+
+        const searchableText = [
+          career.title,
+          career.description,
+          career.category,
+          ...career.skills
+        ].join(" ").toLowerCase();
+
+        return matchesCategory && searchableText.includes(query);
+      });
+
+      container.innerHTML = filteredCareers.map(career => {
+        const index = careers.indexOf(career);
+
+        return `
+          <article class="bg-slate-900 border border-slate-800
+            rounded-2xl p-6 hover:border-sky-400 transition duration-300
+            flex flex-col">
+
+            <div class="text-4xl mb-4">${career.icon}</div>
+
+            <span class="text-xs text-sky-400 uppercase tracking-wider">
+              ${career.category}
+            </span>
+
+            <h4 class="text-xl font-bold mt-2">${career.title}</h4>
+
+            <p class="text-slate-400 text-sm leading-6 mt-3 flex-grow">
+              ${career.description}
+            </p>
+
+            <div class="flex flex-wrap gap-2 mt-5">
+              ${career.skills.slice(0, 3).map(skill => `
+                <span class="bg-slate-800 text-slate-300
+                  rounded-md px-2 py-1 text-xs">
+                  ${skill}
+                </span>
+              `).join("")}
+            </div>
+
+            <button data-index="${index}"
+              class="details-btn mt-6 w-full rounded-lg bg-sky-500
+              text-slate-950 py-3 font-semibold hover:bg-sky-400">
+              Explore Career
+            </button>
+          </article>
+        `;
+      }).join("");
+
+      resultCount.textContent =
+        `${filteredCareers.length} career${filteredCareers.length === 1 ? "" : "s"} found`;
+
+      emptyMessage.classList.toggle("hidden", filteredCareers.length > 0);
+    }
+
+    // Search careers
+    searchInput.addEventListener("input", displayCareers);
+
+    // Filter careers
+    document.querySelectorAll(".filter-btn").forEach(button => {
+      button.addEventListener("click", () => {
+        activeCategory = button.dataset.category;
+
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+          btn.classList.remove("bg-sky-500", "text-slate-950",
+            "font-semibold");
+          btn.classList.add("bg-slate-800");
+        });
+
+        button.classList.remove("bg-slate-800");
+        button.classList.add("bg-sky-500", "text-slate-950",
+          "font-semibold");
+
+        displayCareers();
+      });
+    });
+
+    // Open career details
+    container.addEventListener("click", event => {
+      const button = event.target.closest(".details-btn");
+      if (!button) return;
+
+      const career = careers[Number(button.dataset.index)];
+
+      document.getElementById("modalTitle").textContent = career.title;
+      document.getElementById("modalDescription").textContent =
+        career.description;
+
+      document.getElementById("modalSkills").innerHTML =
+        career.skills.map(skill => `
+          <span class="bg-slate-800 text-sky-300
+            rounded-full px-3 py-2 text-sm">${skill}</span>
+        `).join("");
+
+      document.getElementById("modalPath").textContent = career.path;
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
+
+    // Close modal
+    function closeDetails() {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    }
+
+    document.getElementById("closeModal")
+      .addEventListener("click", closeDetails);
+
+    document.getElementById("doneButton")
+      .addEventListener("click", closeDetails);
+
+    modal.addEventListener("click", event => {
+      if (event.target === modal) closeDetails();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closeDetails();
+    });
+
+    // Initial display
+    displayCareers();
+  </script>
+
+</body>
+</html>
